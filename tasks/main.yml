@@ -1,0 +1,21 @@
+---
+
+- name: Calculate router id
+  set_fact:
+    router_id: "{{ controlPlaneEndpoint.split('.')[-1][-3:] }}"
+
+- name: Install keepalived for master group
+  ansible.builtin.apt:
+    name: keepalived
+    update_cache: yes
+
+- name: Keepalived config
+  ansible.builtin.template:
+    src: keepalived.conf.j2
+    dest: /etc/keepalived/keepalived.conf
+    owner: root
+    group: root
+    mode: '0644'
+  notify: restart keepalived
+
+- meta: flush_handlers

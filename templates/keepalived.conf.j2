@@ -1,0 +1,10 @@
+vrrp_instance keepalived {
+        state BACKUP
+        interface {{ ansible_default_ipv4.interface }}
+        virtual_router_id {{ router_id }}
+        priority {{ 200 - groups[(inventory_group)].index(inventory_hostname) }}
+        advert_int 3
+        virtual_ipaddress {
+		{{ controlPlaneEndpoint }}/{{ ansible_default_ipv4.prefix }}
+        }
+}
